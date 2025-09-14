@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { articles } from "../data/articles.js";
+
+const entertainment = articles
+  .filter(article => article.category === "Entertainment")
+  .sort((a, b) => b.date.getTime() - a.date.getTime());
+---
+
+<BaseLayout>
+  <h2 class="text-3xl font-bold mb-6 font-serif">Entertainment</h2>
+
+  <div class="grid grid-cols-2 gap-8">
+    {entertainment.map(article => (
+      <article class="flex flex-col">
+        <img 
+          src={article.image} 
+          alt={article.title} 
+          class="w-full h-40 object-cover mb-3 rounded"
+        />
+        <h3 class="text-xl font-serif font-semibold hover:underline cursor-pointer">
+          <a href={`/articles/${article.id}`}>{article.title}</a>
+        </h3>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

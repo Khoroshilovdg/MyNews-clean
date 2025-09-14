@@ -1,0 +1,21 @@
+---
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MyNews</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+  </head>
+  <body class="bg-white text-gray-900 font-sans">
+    <Header />
+    <main class="max-w-3xl mx-auto p-4">
+      <slot />
+    </main>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+---
+import { supabase } from '../lib/supabase';
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/current-affairs", label: "Current Affairs" },
+  { href: "/entertainment", label: "Entertainment" },
+  { href: "/sport", label: "Sport" },
+];
+
+// Получаем сессию через серверный контекст
+const { data: { session } } = await supabase.auth.getSession();
+
+let isLoggedIn = !!session;
+---
+
+<header class="bg-gray-900 text-white p-4 flex justify-between items-center">
+  <h1 class="text-xl font-bold">📰 MyNews</h1>
+
+  <div class="flex items-center space-x-6">
+    <nav class="space-x-4">
+      {links.map(link => (
+        <a href={link.href} class="hover:text-yellow-400">{link.label}</a>
+      ))}
+    </nav>
+
+    <div class="space-x-2">
+      {isLoggedIn ? (
+        <>
+          <a href="/dashboard" class="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 transition">Dashboard</a>
+          <form action="/api/signout" method="POST" class="inline">
+            <button type="submit" class="px-3 py-1 bg-red-600 rounded hover:bg-red-700 transition">
+              Sign Out
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          <a href="/signin" class="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 transition">Log In</a>
+          <a href="/register" class="px-3 py-1 bg-green-600 rounded hover:bg-green-700 transition">Sign Up</a>
+        </>
+      )}
+    </div>
+  </div>
+</header>

@@ -1,16 +1,42 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { articles } from "../data/articles.js";
 
+// Сортировка по дате (новые сначала)
+const latest = [...articles]
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .slice(0, 5);
+
+const [featured, ...rest] = latest;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro!</h1>
-	</body>
-</html>
+<BaseLayout>
+  <h2 class="text-3xl font-bold mb-6 font-serif">Latest News</h2>
+
+  <!-- Главная статья -->
+  <article class="mb-10 border-b border-gray-300 pb-6">
+    <h2 class="text-4xl font-serif font-bold mb-2 hover:underline cursor-pointer">
+      <a href={`/articles/${featured.id}`}>{featured.title}</a>
+    </h2>
+    <p class="text-sm text-gray-500 mb-3">
+      {featured.date.toLocaleDateString("ru-RU")} · {featured.category}
+    </p>
+    <p class="text-lg leading-relaxed text-gray-700">{featured.excerpt}</p>
+  </article>
+
+  <!-- Остальные статьи: только мини-картинка + заголовок -->
+  <div class="grid grid-cols-2 gap-8">
+    {rest.map(article => (
+      <article class="flex flex-col">
+        <img 
+          src={article.image} 
+          alt={article.title} 
+          class="w-32 h-24 object-cover mb-3 rounded"
+        />
+        <h3 class="text-xl font-serif font-semibold hover:underline cursor-pointer">
+          <a href={`/articles/${article.id}`}>{article.title}</a>
+        </h3>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

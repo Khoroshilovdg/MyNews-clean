@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { articles } from "../../data/articles.js";
+
+// Получаем ID из URL
+const { id } = Astro.params;
+
+// Ищем статью по id
+const article = articles.find(a => a.id.toString() === id);
+
+// Если не найдена — выбрасываем 404
+if (!article) {
+  throw new Error("Article not found", { cause: { status: 404 } });
+}
+---
+
+<BaseLayout>
+  <article class="max-w-3xl mx-auto">
+    <h1 class="text-4xl font-serif font-bold mb-4">{article.title}</h1>
+    <p class="text-sm text-gray-500 mb-6">
+      {article.date.toLocaleDateString("ru-RU")} · {article.category}
+    </p>
+    <img 
+      src={article.image} 
+      alt={article.title} 
+      class="w-full h-96 object-cover mb-6 rounded"
+    />
+    <p class="text-lg leading-relaxed text-gray-800">{article.excerpt}</p>
+  </article>
+</BaseLayout>
