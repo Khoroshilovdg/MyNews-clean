@@ -1,0 +1,90 @@
+---
+// dashboard.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { supabase } from "../lib/supabase";
+
+// code gets access and refresh tokens from cookies to check if the user is logged in
+const accessToken = Astro.cookies.get("sb-access-token");
+const refreshToken = Astro.cookies.get("sb-refresh-token");
+//If at least one of the tokens is missing, it means that the user is not authorized. In this case, Astro.redirect(“/signin”) immediately redirects the user to the login page (/signin)
+if (!accessToken || !refreshToken) {
+  return Astro.redirect("/signin");
+}
+
+// sets up Supabase session using tokens from cookies
+await supabase.auth.setSession({
+  access_token: accessToken.value,
+  refresh_token: refreshToken.value,
+});
+//gets the user object. If the session is valid, user will contain the user data
+const { data: { user }, error } = await supabase.auth.getUser();
+//re-check. If an error occurs when receiving user data, the user is redirected back to the login page
+if (error || !user) {
+  return Astro.redirect("/signin");
+}
+---
+
+<BaseLayout>
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg border p-8">
+      <div class="flex justify-between items-center mb-8 border-b pb-6">
+        <div>
+          <h1 class="text-4xl font-serif font-bold text-gray-900">Control Panel</h1>
+          <p class="text-gray-600 mt-2">Welcome, <span class="font-medium">{user.email}</span>!</p>
+        </div>
+        <a 
+          href="/api/signout" 
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition duration-200"
+        >
+          Sign Out
+        </a>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+          <h2 class="text-xl font-serif font-semibold text-blue-800 mb-2">📰 News</h2>
+          <p class="text-blue-600">Read the latest news from various categories.</p>
+          <a href="/" class="inline-block mt-3 text-blue-700 hover:text-blue-800 font-medium">Go to news →</a>
+        </div>
+        
+        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+          <h2 class="text-xl font-serif font-semibold text-green-800 mb-2">⚽ Sport</h2>
+          <p class="text-green-600">Follow the sport news and results.</p>
+          <a href="/sport" class="inline-block mt-3 text-green-700 hover:text-green-800 font-medium">Go to sport news →</a>
+        </div>
+        
+        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
+          <h2 class="text-xl font-serif font-semibold text-purple-800 mb-2">🎬 Entertainment</h2>
+          <p class="text-purple-600">Follow the latest news from entertainment world.</p>
+          <a href="/entertainment" class="inline-block mt-3 text-purple-700 hover:text-purple-800 font-medium">Go to entertainment news →</a>
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 p-6 rounded-lg border">
+        <h2 class="text-2xl font-serif font-bold text-gray-900 mb-4">Profile info</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <strong class="text-gray-700">Email:</strong> 
+            <span class="text-gray-900">{user.email}</span>
+          </div>
+          <div>
+            <strong class="text-gray-700">Created at:</strong> 
+            <span class="text-gray-900">{new Date(user.created_at).toLocaleDateString("ru-RU")}</span>
+          </div>
+          <div>
+            <strong class="text-gray-700">Last sign in:</strong> 
+            <span class="text-gray-900">{new Date(user.last_sign_in_at || user.created_at).toLocaleDateString("ru-RU")}</span>
+          </div>
+          <div>
+            <strong class="text-gray-700">Status:</strong> 
+            <span class="text-green-600 font-medium">✓ Active</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8 text-center">
+        <p class="text-gray-600">Now you can use all the features of MyNews!</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

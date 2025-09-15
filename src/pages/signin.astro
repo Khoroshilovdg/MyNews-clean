@@ -1,0 +1,54 @@
+---
+// signin.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg border">
+    <h1 class="text-3xl font-serif font-bold mb-6 text-center text-gray-900">Sign in to MyNews</h1>
+    <!-- Specifies where form data will be sent (API route /api/signin). data will be sent using the HTTP POST method -->
+    <form action="/api/signin" method="POST" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required 
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Enter your email"
+        >
+      </div>
+      
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required 
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Enter your password"
+        >
+      </div>
+      
+      <button 
+        type="submit" 
+        class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-200"
+      >
+        Sign in
+      </button>
+    </form>
+    
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">
+        Don't have an account? 
+        <a href="/register" class="text-blue-600 hover:text-blue-700 font-medium">Sign up</a>
+      </p>
+    </div>
+    
+    <div class="mt-4 text-center">
+      <a href="/" class="text-gray-500 hover:text-gray-700 text-sm">← Back to Home page</a>
+    </div>
+  </div>
+</BaseLayout>
