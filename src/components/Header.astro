@@ -1,7 +1,7 @@
 ---
-// src/components/Header.astro
-import { supabase } from '../lib/supabase';
-
+// Header.astro
+import { supabase } from '../lib/supabase'; //imports the Supabase client from the supabase.js file
+//array of objects that contains data for navigation links
 const links = [
   { href: "/", label: "Home" },
   { href: "/current-affairs", label: "Current Affairs" },
@@ -9,23 +9,23 @@ const links = [
   { href: "/sport", label: "Sport" },
 ];
 
-// Проверяем наличие токенов в cookies
+// Astro API for accessing cookies, checking for tokens in cookies
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
-
+//variables that used conditional content display. isLoggedIn true if user logged in, and user will contain user data
 let isLoggedIn = false;
 let user = null;
-
+//following block of code will only be executed if both tokens are present in the cookie files
 if (accessToken && refreshToken) {
-  // Устанавливаем сессию в supabase
+  //sets up a Supabase session on the Astro server using tokens from cookie files
   await supabase.auth.setSession({
     access_token: accessToken.value,
     refresh_token: refreshToken.value,
   });
   
-  // Получаем текущего пользователя
+  // method gets the current user's data. currentUser has info about the user if they logged in, and error if something wrong
   const { data: { user: currentUser }, error } = await supabase.auth.getUser();
-  
+  // if user has been successfully received and there are no errors. The variables isLoggedIn and user are updated
   if (currentUser && !error) {
     isLoggedIn = true;
     user = currentUser;
@@ -35,7 +35,7 @@ if (accessToken && refreshToken) {
 
 <header class="bg-gray-900 text-white p-4 flex justify-between items-center">
   <h1 class="text-xl font-bold">📰 MyNews</h1>
-
+<!-- iterates through links array defined in the script section and creates link for each object, displaying its label -->
   <div class="flex items-center space-x-6">
     <nav class="space-x-4">
       {links.map(link => (
@@ -43,10 +43,10 @@ if (accessToken && refreshToken) {
       ))}
     </nav>
 
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2"> <!-- If isLoggedIn is true (the user is logged in), the first block <> is displayed. The “Dashboard” and “Sign Out” buttons appear. If isLoggedIn is false (the user is not logged in), the second block <> is displayed. The “Log In” and “Sign Up” buttons appear. -->
       {isLoggedIn ? (
         <>
-          <span class="text-sm text-gray-300">Привет, {user?.email}</span>
+          <span class="text-sm text-gray-300">Hi, {user?.email}</span>
           <a href="/dashboard" class="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 transition">Dashboard</a>
           <a href="/api/signout" class="px-3 py-1 bg-red-600 rounded hover:bg-red-700 transition">
             Sign Out

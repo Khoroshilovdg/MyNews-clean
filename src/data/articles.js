@@ -1,11 +1,12 @@
+  //makes the articles array available for import in other files. The array cannot be changed after it has been created.
   export const articles = [
     {
-      id: 1,
-      title: "India Thailand Joint Military Drill Exercise Maitree 2025",
-      category: "Current Affairs",
-      date: new Date("2025-08-20"),
-      excerpt: "India and Thailand have launched the 14th edition of their joint military exercise, Exercise Maitree 2025, in Meghalaya. Running from September 1 to 14, the drills focus on enhancing counter-terrorism capabilities and strengthening bilateral defense cooperation.",
-      image: "/images/ca1.jpg",
+      id: 1, //unique article identifier
+      title: "India Thailand Joint Military Drill Exercise Maitree 2025", //title
+      category: "Current Affairs", //category
+      date: new Date("2025-08-20"), //creates a JavaScript Date object, the publication date of the article
+      excerpt: "India and Thailand have launched the 14th edition of their joint military exercise, Exercise Maitree 2025, in Meghalaya. Running from September 1 to 14, the drills focus on enhancing counter-terrorism capabilities and strengthening bilateral defense cooperation.", //excerpt from an article
+      image: "/images/ca1.jpg", //path to the image associated with the article
     },
     {
       id: 2,

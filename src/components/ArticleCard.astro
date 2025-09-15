@@ -1,9 +1,9 @@
 ---
-const { title, date, excerpt, category } = Astro.props;
+const { title, date, excerpt, category } = Astro.props; //destructuring an object to extract properties
 ---
 
 <article class="py-6 border-b border-gray-200">
-  <h2 class="text-2xl font-serif font-bold mb-1 hover:underline cursor-pointer">{title}</h2>
-  <p class="text-sm text-gray-500 mb-2">{date.toLocaleDateString("ru-RU")} · {category}</p>
-  <p class="text-base leading-relaxed">{excerpt}</p>
+  <h2 class="text-2xl font-serif font-bold mb-1 hover:underline cursor-pointer">{title}</h2> <!-- title displays the name of the article -->
+  <p class="text-sm text-gray-500 mb-2">{date.toLocaleDateString("ru-RU")} · {category}</p> <!-- displays the date (dd.mm.year) and category of the article -->
+  <p class="text-base leading-relaxed">{excerpt}</p> <!-- summary or excerpt from an article -->
 </article>

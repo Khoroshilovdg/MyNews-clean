@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { articles } from "../data/articles.js";
-
+//new constant that contain only articles related to “Sport", filters the articles array, keep “Sport”, sorts the filtered array by date, from newest to oldest
 const sport = articles
   .filter(article => article.category === "Sport")
   .sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -9,7 +9,7 @@ const sport = articles
 
 <BaseLayout>
   <h2 class="text-3xl font-bold mb-6 font-serif">Sport</h2>
-
+    <!-- iterates through the currentAffairs array. For each article in this array, it creates a new card -->
   <div class="grid grid-cols-2 gap-8">
     {sport.map(article => (
       <article class="flex flex-col">

@@ -1,42 +1,44 @@
 ---
+//import of the layout and data
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { articles } from "../data/articles.js";
 
-// Сортировка по дате (новые сначала)
+// creates a new array called latest, copying all elements from the articles array, sorts the latest array by date, and keeps only the first 5 elements of the sorted array. 
 const latest = [...articles]
   .sort((a, b) => b.date.getTime() - a.date.getTime())
   .slice(0, 5);
-
+//Splits the latest array into two parts: featured — the first element of the latest array, the “main” article, rest — the rest of the latest array.
 const [featured, ...rest] = latest;
 ---
 
 <BaseLayout>
   <h2 class="text-3xl font-bold mb-6 font-serif">Latest News</h2>
 
-  <!-- Главная статья -->
+  <!-- Main article -->
   <article class="mb-10 border-b border-gray-300 pb-6">
     <h2 class="text-4xl font-serif font-bold mb-2 hover:underline cursor-pointer">
-      <a href={`/articles/${featured.id}`}>{featured.title}</a>
-    </h2>
+      <a href={`/articles/${featured.id}`}>{featured.title}</a> <!-- creates a link to the page of this article -->
+    </h2> 
     <p class="text-sm text-gray-500 mb-3">
-      {featured.date.toLocaleDateString("ru-RU")} · {featured.category}
+      {featured.date.toLocaleDateString("ru-RU")} · {featured.category} <!-- formats the article date into the format (dd.mm.year) -->
     </p>
-    <p class="text-lg leading-relaxed text-gray-700">{featured.excerpt}</p>
+    <p class="text-lg leading-relaxed text-gray-700">{featured.excerpt}</p> <!-- creates a link to the page of this article -->
   </article>
 
-  <!-- Остальные статьи: только мини-картинка + заголовок -->
-  <div class="grid grid-cols-2 gap-8">
-    {rest.map(article => (
+  <!-- Other articles: mini-picture + headline -->
+  <div class="grid grid-cols-2 gap-8"> <!-- grid with two columns and a gap of 8 units using Tailwind CSS -->
+    {rest.map(article => ( //map is array method that iterates over each article in the rest array, it creates a new article with an image and a title 
       <article class="flex flex-col">
         <img 
           src={article.image} 
           alt={article.title} 
           class="w-32 h-24 object-cover mb-3 rounded"
-        />
+        /> 
         <h3 class="text-xl font-serif font-semibold hover:underline cursor-pointer">
           <a href={`/articles/${article.id}`}>{article.title}</a>
         </h3>
       </article>
     ))}
+	<!-- inserts the path to the image from the article data. Creates a link to each individual article page -->
   </div>
 </BaseLayout>
