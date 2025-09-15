@@ -1,4 +1,5 @@
 ---
+// src/components/Header.astro
 import { supabase } from '../lib/supabase';
 
 const links = [
@@ -8,10 +9,28 @@ const links = [
   { href: "/sport", label: "Sport" },
 ];
 
-// Получаем сессию через серверный контекст
-const { data: { session } } = await supabase.auth.getSession();
+// Проверяем наличие токенов в cookies
+const accessToken = Astro.cookies.get("sb-access-token");
+const refreshToken = Astro.cookies.get("sb-refresh-token");
 
-let isLoggedIn = !!session;
+let isLoggedIn = false;
+let user = null;
+
+if (accessToken && refreshToken) {
+  // Устанавливаем сессию в supabase
+  await supabase.auth.setSession({
+    access_token: accessToken.value,
+    refresh_token: refreshToken.value,
+  });
+  
+  // Получаем текущего пользователя
+  const { data: { user: currentUser }, error } = await supabase.auth.getUser();
+  
+  if (currentUser && !error) {
+    isLoggedIn = true;
+    user = currentUser;
+  }
+}
 ---
 
 <header class="bg-gray-900 text-white p-4 flex justify-between items-center">
@@ -24,15 +43,14 @@ let isLoggedIn = !!session;
       ))}
     </nav>
 
-    <div class="space-x-2">
+    <div class="flex items-center space-x-2">
       {isLoggedIn ? (
         <>
+          <span class="text-sm text-gray-300">Привет, {user?.email}</span>
           <a href="/dashboard" class="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 transition">Dashboard</a>
-          <form action="/api/signout" method="POST" class="inline">
-            <button type="submit" class="px-3 py-1 bg-red-600 rounded hover:bg-red-700 transition">
-              Sign Out
-            </button>
-          </form>
+          <a href="/api/signout" class="px-3 py-1 bg-red-600 rounded hover:bg-red-700 transition">
+            Sign Out
+          </a>
         </>
       ) : (
         <>
